@@ -89,6 +89,11 @@ Returns randomly generated user UUID
 						Type:        framework.TypeString,
 						Description: "Raw transaction payload",
 					},
+					"isDev": {
+						Type:        framework.TypeBool,
+						Description: "Development mode flag",
+						Default:     false,
+					},
 				},
 				Callbacks: map[logical.Operation]framework.OperationFunc{
 					logical.UpdateOperation: b.pathSign,
@@ -113,6 +118,11 @@ Returns randomly generated user UUID
 					"coinType": {
 						Type:        framework.TypeInt,
 						Description: "Cointype of transaction",
+					},
+					"isDev": {
+						Type:        framework.TypeBool,
+						Description: "Development mode flag",
+						Default:     false,
 					},
 				},
 				Callbacks: map[logical.Operation]framework.OperationFunc{
@@ -151,6 +161,11 @@ Generates a batch of addresses from stored mnemonic and passphrase using a templ
 					"count": {
 						Type:        framework.TypeInt,
 						Description: "Number of addresses to generate",
+					},
+					"isDev": {
+						Type:        framework.TypeBool,
+						Description: "Development mode flag",
+						Default:     false,
 					},
 				},
 				Callbacks: map[logical.Operation]framework.OperationFunc{
