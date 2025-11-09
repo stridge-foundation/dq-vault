@@ -32,10 +32,9 @@ func (b *Backend) pathRegister(ctx context.Context, req *logical.Request,
 	// default entropy length
 	entropyLength := config.Entropy
 
-	// generate new random UUID
-	uuid := helpers.NewUUID()
+	uuid := d.Get("uuid").(string)
 	for helpers.UUIDExists(ctx, req, uuid) {
-		uuid = helpers.NewUUID()
+		return nil, logical.CodedError(http.StatusUnprocessableEntity, "UUID already exists")
 	}
 
 	// generated storage path to store user info
