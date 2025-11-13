@@ -37,11 +37,48 @@ func NewBackend(_ *logical.BackendConfig) *Backend {
 			// api/register
 			{
 				Pattern:      "register",
-				HelpSynopsis: "Registers a new user in vault",
+				HelpSynopsis: "Registers a new user in vault with provided UUID",
 				HelpDescription: `
 
-Registers new user in vault using UUID. Generates mnemonics if not provided and store it in vault.
-Returns randomly generated user UUID
+Registers new user in vault using provided UUID. Generates mnemonics if not provided and store it in vault.
+UUID must be provided by the caller. For auto-generated UUID, use register_uuid endpoint.
+
+`,
+				Fields: map[string]*framework.FieldSchema{
+					"uuid": {
+						Type:        framework.TypeString,
+						Description: "UUID of user (required)",
+						Required:    true,
+					},
+					"username": {
+						Type:        framework.TypeString,
+						Description: "Username of new user (optional)",
+						Default:     "",
+					},
+					"mnemonic": {
+						Type:        framework.TypeString,
+						Description: "Mnemonic of user (optional)",
+						Default:     "",
+					},
+					"passphrase": {
+						Type:        framework.TypeString,
+						Description: "Passphrase of user (optional)",
+						Default:     "",
+					},
+				},
+				Callbacks: map[logical.Operation]framework.OperationFunc{
+					logical.UpdateOperation: b.pathRegister,
+				},
+			},
+
+			// api/register_uuid
+			{
+				Pattern:      "register_uuid",
+				HelpSynopsis: "Registers a new user in vault with auto-generated UUID",
+				HelpDescription: `
+
+Registers new user in vault with auto-generated UUID. Generates mnemonics if not provided and store it in vault.
+UUID will be automatically generated and returned in the response.
 
 `,
 				Fields: map[string]*framework.FieldSchema{
@@ -62,7 +99,7 @@ Returns randomly generated user UUID
 					},
 				},
 				Callbacks: map[logical.Operation]framework.OperationFunc{
-					logical.UpdateOperation: b.pathRegister,
+					logical.UpdateOperation: b.pathRegisterUUID,
 				},
 			},
 
